@@ -1,0 +1,12 @@
+agent: RndDsacAgent
+agent_config:
+  risk_mode: cvar
+  num_quantiles: 32
+  rnd_mapping: logarithmic
+algo: RNDDSAC
+algo_config:
+  rnd_learning_rate: 0.0003
+  rnd_clip_grad_norm: 100
+  learning_rate: 0.0003
+  batch_size: 256
+  fixed_alpha: 0.2

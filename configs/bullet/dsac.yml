@@ -1,0 +1,8 @@
+agent: DsacAgent
+agent_config:
+  num_quantiles: 32
+algo: DSAC
+algo_config:
+  learning_rate: 0.0003
+  batch_size: 256
+  fixed_alpha: 0.2

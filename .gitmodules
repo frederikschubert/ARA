@@ -1,0 +1,3 @@
+[submodule "dependencies/pybullet-gym"]
+	path = dependencies/pybullet-gym
+	url = https://github.com/benelot/pybullet-gym

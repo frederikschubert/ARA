@@ -1,0 +1,7 @@
+agent: SacAgent
+agent_config: {}
+algo: SAC
+algo_config:
+  learning_rate: 0.0003
+  batch_size: 256
+  fixed_alpha: 0.2
