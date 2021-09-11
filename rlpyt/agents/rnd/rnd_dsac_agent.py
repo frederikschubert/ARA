@@ -26,7 +26,7 @@ class RndDsacAgent(RndAgentMixin, DsacAgent):
             tau_hat[:, 0:1] = tau[:, 0:1] / 2.0
             tau_hat[:, 1:] = (tau[:, 1:] + tau[:, :-1]) / 2.0
             if transform:
-                param = self.compute_risk_param(observation, prev_action=None)
+                param = self.compute_risk_param(observation, prev_action=prev_action)
                 risk_weights = distortion_de(
                     tau_hat, mode=self.risk_mode, param=param.unsqueeze(-1)
                 )

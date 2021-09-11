@@ -23,11 +23,17 @@ class RND:
         self.itr_samples = []
 
     def rnd_loss(self, samples):
-        states, actions = buffer_to(
-            (samples.agent_inputs.observation, samples.action),
+        states, next_states, actions = buffer_to(
+            (
+                samples.agent_inputs.observation,
+                samples.target_inputs.observation,
+                samples.action,
+            ),
             device=self.agent.device,
         )
-        rnd_errors = self.agent.rnd_model(states, prev_action=None)
+        rnd_errors = self.agent.rnd_model(
+            torch.cat([states, states - next_states], dim=-1), prev_action=actions
+        )
         return rnd_errors
 
     def loss(self, samples):

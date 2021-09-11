@@ -6,10 +6,6 @@ from rlpyt.utils.logging import logger
 
 
 class RNDDSAC(RND, DSAC):
-    def rnd_loss(self, samples):
-        states = buffer_to(samples.agent_inputs.observation, device=self.agent.device)
-        rnd_errors = self.agent.rnd_model(states)
-        return rnd_errors
 
     def get_tau(self, samples, description: str):
         states, next_states, actions = buffer_to(
