@@ -169,7 +169,7 @@ def main():
         make_bullet,
         env_kwargs=env_kwargs,
         eval_env_kwargs=env_kwargs,
-        init_kwargs=dict(entity="tnt", project="rnd-iqn", group=args.group),
+        init_kwargs=dict(entity="tnt", project="ara", group=args.group),
         algo_kwargs=algo_kwargs,
         TrajInfoCls=BulletTrajInfo if "Bullet" in args.walker_id else Box2DTrajInfo,
     )

@@ -70,6 +70,7 @@ class RndAgentMixin:
     def initialize(self, env_spaces, share_memory=False, **kwargs):
         super().initialize(env_spaces, share_memory, **kwargs)
         self.rnd_model = RndModel(self.rnd_input_shape, self.rnd_output_size)
+        print(self.rnd_model)
         if share_memory:
             self.rnd_model.share_memory()
             self.shared_rnd_model = self.rnd_model
