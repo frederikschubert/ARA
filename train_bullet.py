@@ -23,6 +23,17 @@ class BulletTrajInfo(TrajInfo):
         return super().step(observation, action, reward, done, agent_info, env_info)
 
 
+class Box2DTrajInfo(TrajInfo):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.FailureRate = 0.0
+
+    def step(self, observation, action, reward, done, agent_info, env_info):
+        if reward <= -100:
+            self.FailureRate = 1.0
+        return super().step(observation, action, reward, done, agent_info, env_info)
+
+
 class BulletArgs(Tap):
     walker_id: str = "DynamicWalker2DBulletEnv-v0"
     max_broken_axes: int = 1
@@ -94,7 +105,7 @@ class TrainBulletArgs(ExperimentArgs, BulletArgs):
         self.steps = self.steps or int(1e6)
         self.env_type = "mujoco"
         self.n_envs = 1
-        self.eval_n_envs = 4
+        self.eval_n_envs = 1
         self.eval_max_steps = int(51e3)
         self.eval_max_trajectories = 50
         algorithm_name = os.path.basename(self.config).split(".")[0]
@@ -160,7 +171,7 @@ def main():
         eval_env_kwargs=env_kwargs,
         init_kwargs=dict(entity="tnt", project="rnd-iqn", group=args.group),
         algo_kwargs=algo_kwargs,
-        TrajInfoCls=BulletTrajInfo
+        TrajInfoCls=BulletTrajInfo if "Bullet" in args.walker_id else Box2DTrajInfo,
     )
 
 

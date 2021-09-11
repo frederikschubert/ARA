@@ -2,11 +2,11 @@ from abc import abstractmethod
 import numpy as np
 
 import torch
+from torch import distributions
 from rlpyt.models.rnd.rnd_model import RndModel
 from rlpyt.models.utils import strip_ddp_state_dict
 from rlpyt.utils.logging import logger
 from torch.nn.parallel import DistributedDataParallel as DDP
-
 
 class RndAgentMixin:
     def __init__(
@@ -30,19 +30,12 @@ class RndAgentMixin:
 
     def compute_risk_param(self, observation: torch.Tensor, prev_action: torch.Tensor):
         rnd_error = self.rnd_model(observation, prev_action=prev_action)
-        rnd_error_normalized = rnd_error / self.rnd_error_std
+        rnd_error_distribution = distributions.HalfNormal(scale=torch.ones_like(rnd_error) * self.rnd_error_std)
+        rnd_error_prob = 1.0 - rnd_error_distribution.cdf(rnd_error)
         if self.risk_mode == "wang":
-            rnd_error_normalized = torch.clamp(rnd_error_normalized, 0, 2.0)
-            param = torch.cos(rnd_error_normalized * np.pi / 2.0)
+            param = torch.cos(rnd_error_prob * np.pi / 2.0)
         elif self.risk_mode == "cvar":
-            rnd_error_normalized = torch.clamp(rnd_error_normalized, 0, 1.0)
-            if self.rnd_mapping == "linear":
-                x = -rnd_error_normalized + 1
-            elif self.rnd_mapping == "logarithmic":
-                x = -torch.pow(rnd_error_normalized, 2) + 1
-            else:
-                x = torch.exp(-self.cvar_slope * rnd_error_normalized)
-            param = torch.clamp(x, self.cvar_lower_bound, 1)
+            param = rnd_error_prob
         else:
             raise ValueError("Only risk_mode wang and cvar are supported")
         return param

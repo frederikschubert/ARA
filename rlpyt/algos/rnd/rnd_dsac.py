@@ -22,7 +22,9 @@ class RNDDSAC(RND, DSAC):
         )
         if description in self.risk_transform_fields:
             tau, tau_hat, tau_fractions, param = self.agent.get_tau(
-                states, actions, transform=True
+                torch.cat([states, states - next_states], dim=-1),
+                actions,
+                transform=True,
             )
             logger.record_histogram("RND/param", param.detach().cpu().numpy())
             return tau, tau_hat, tau_fractions
