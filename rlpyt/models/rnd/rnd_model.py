@@ -22,16 +22,15 @@ class RndModel(nn.Module):
         self.min_size = min_size
         self.resize_input = False
         self.expand_input = False
+        self.rnd_obs_mean_std = RunningMeanStdModel([2 * s for s in input_shape])
         if len(input_shape) == 1:
             input_size = input_shape[0]
-            self.rnd_obs_mean_std = RunningMeanStdModel(2 * input_size)
             if input_size < min_size:
                 self.resize_input = True
             self.register_buffer("const_vec", torch.arange(1, 1 + input_size))
             self.input_shape = (1, input_size, input_size)
             self.expand_input = True
         elif len(input_shape) == 3:
-            self.rnd_obs_mean_std = RunningMeanStdModel([2 * input_shape[0], *input_shape[1:]])
             self.input_shape = input_shape
         else:
             raise ValueError("Only 1 or 3 dimensional observations supported")
