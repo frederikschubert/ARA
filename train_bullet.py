@@ -16,10 +16,12 @@ class BulletTrajInfo(TrajInfo):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.FailureRate = 0.0
+        self.CumFailures = 0
 
     def step(self, observation, action, reward, done, agent_info, env_info):
         if done and not env_info.timeout:
             self.FailureRate = 1.0
+            self.CumFailures += 1
         return super().step(observation, action, reward, done, agent_info, env_info)
 
 
@@ -169,7 +171,7 @@ def main():
         make_bullet,
         env_kwargs=env_kwargs,
         eval_env_kwargs=env_kwargs,
-        init_kwargs=dict(entity="tnt", project="ara", group=args.group),
+        init_kwargs=dict(entity="tnt", project="ara-aistats", group=args.group),
         algo_kwargs=algo_kwargs,
         TrajInfoCls=BulletTrajInfo if "Bullet" in args.walker_id else Box2DTrajInfo,
     )
