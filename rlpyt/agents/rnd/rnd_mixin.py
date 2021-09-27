@@ -33,7 +33,7 @@ class RndAgentMixin:
         rnd_error_distribution = distributions.HalfNormal(scale=torch.ones_like(rnd_error) * self.rnd_error_std)
         rnd_error_prob = 1.0 - rnd_error_distribution.cdf(rnd_error)
         if self.risk_mode == "wang":
-            param = torch.cos(rnd_error_prob * np.pi / 2.0)
+            param = torch.cos(rnd_error_prob * np.pi)
         elif self.risk_mode == "cvar":
             param = rnd_error_prob
         else:

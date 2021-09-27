@@ -102,7 +102,7 @@ class TrainBulletArgs(ExperimentArgs, BulletArgs):
     def process_args(self) -> None:
         super().process_args()
         self.batch_T = 1
-        self.log_interval_steps = int(1e4)
+        self.log_interval_steps = self.log_interval_steps or int(1e4)
         self.sync_sample = True
         self.steps = self.steps or int(1e6)
         self.env_type = "mujoco"
